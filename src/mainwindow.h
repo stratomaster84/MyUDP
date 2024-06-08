@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "UdpTrans.h"
+#include "TableModel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,7 +17,8 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    UdpTrans _udp;  // наш клиент/сервер
+    UdpTrans udp_trans;  // наш клиент/сервер
+    TableModel *table_model;  // модель таблицы для вывода сообщений
 
 public slots:
     void slotSendDatagram();    // слот кнопки - отправить датаграмму

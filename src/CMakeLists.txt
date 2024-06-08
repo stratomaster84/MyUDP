@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #ЧТОБЫ НЕ БЫЛО КОНСОЛИ
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--subsystem,windows")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--subsystem,windows")
 
 
 # QtCreator supports the following variables for Android, which are identical to qmake Android variables.
@@ -34,6 +34,8 @@ find_package(Qt5 COMPONENTS Widgets Network REQUIRED)
 if(ANDROID)
   add_library(MyUDP SHARED
     main.cpp
+    TableModel.h
+    TableModel.cpp
     mainwindow.cpp
     UdpTrans.cpp
     UdpTrans.h
@@ -43,6 +45,8 @@ if(ANDROID)
 else()
   add_executable(MyUDP
     main.cpp
+    TableModel.h
+    TableModel.cpp
     mainwindow.cpp
     UdpTrans.cpp
     UdpTrans.h

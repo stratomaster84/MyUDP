@@ -132,24 +132,6 @@ p, li { white-space: pre-wrap; }
      <string>ОТПРАВИТЬ</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="receive_txt">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>250</y>
-      <width>501</width>
-      <height>221</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <property name="readOnly">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QLabel" name="name_lbl">
     <property name="geometry">
      <rect>
@@ -182,6 +164,19 @@ p, li { white-space: pre-wrap; }
       <pointsize>12</pointsize>
      </font>
     </property>
+   </widget>
+   <widget class="QTableView" name="receive_tabl">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>250</y>
+      <width>501</width>
+      <height>221</height>
+     </rect>
+    </property>
+    <attribute name="verticalHeaderVisible">
+     <bool>false</bool>
+    </attribute>
    </widget>
   </widget>
  </widget>
