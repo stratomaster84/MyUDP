@@ -25,6 +25,10 @@ public slots:
     void slotChangePort();      // слот кнопки - поменять порт
     void slotDataRead(const QByteArray &, const QHostAddress &);    // слот получения данных от клиента
 
+public:
+    void loadDataFromForm(QByteArray& datagram);
+    void loadDataToForm(const QByteArray &datagram, QPair<QString,QString>& _data);
+
 signals:
     void signalSendDatagram(const QByteArray &, const QHostAddress &);  // сигнал от слота к серверу - отправить датаграмму
     void signalChangePort(quint16);                                     // сигнал от слота к клиент/серверу - поменять порт

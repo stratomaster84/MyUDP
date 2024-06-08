@@ -44,7 +44,8 @@ void MainWindow::slotSendDatagram()
         return;
     }
 
-    QByteArray datagram(ui->send_txt->toPlainText().toUtf8());
+    QByteArray datagram;
+    loadDataFromForm(datagram);
     if(datagram.isNull()){
         table_model->newStringRow("ОШИБКА!!!","НЕИЗВЕСТНЫЙ ФОРМАТ ДАННЫХ");
         return;
@@ -76,10 +77,45 @@ void MainWindow::slotDataRead(const QByteArray &datagram, const QHostAddress &ad
 {
     if(datagram.isNull())
         return;
-    if(address.isNull()){
-        table_model->newStringRow("UNKNOWN",QString::fromUtf8(datagram));
+    QPair<QString, QString> _data;
+    loadDataToForm(datagram,_data);
+    if(!_data.first.isEmpty()){
+            table_model->newStringRow(_data.first,_data.second);
+        }
+    else if(address.isNull()){
+        table_model->newStringRow("UNKNOWN",_data.second);
     }
     else{
-        table_model->newStringRow(address.toString(),QString::fromUtf8(datagram));
+        table_model->newStringRow(address.toString(),_data.second);
     }
+}
+
+void MainWindow::loadDataFromForm(QByteArray& datagram){
+    quint8 _flags;
+    if(ui->name_edit->text().isEmpty()){
+        _flags = 0;
+    }
+    else{
+        _flags = 1;
+    }
+
+    QDataStream out(&datagram, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_10);
+    out << _flags;
+    if(_flags != 0){
+        out << ui->name_edit->text();
+    }
+    out << ui->send_txt->toPlainText();
+}
+
+void MainWindow::loadDataToForm(const QByteArray &datagram, QPair<QString,QString>& _data){
+    quint8 _flags;
+
+    QDataStream in(datagram);
+    in.setVersion(QDataStream::Qt_5_10);
+    in >> _flags;
+    if(_flags != 0){
+        in >> _data.first;
+    }
+    in >> _data.second;
 }
