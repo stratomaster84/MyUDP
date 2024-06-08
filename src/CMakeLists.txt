@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #ЧТОБЫ НЕ БЫЛО КОНСОЛИ
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--subsystem,windows")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--subsystem,windows")
 
 
 # QtCreator supports the following variables for Android, which are identical to qmake Android variables.
