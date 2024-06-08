@@ -6,7 +6,8 @@
 class UdpTrans : public QObject {
 Q_OBJECT
 private:
-    QUdpSocket* _socket;    //  сокет сервера
+    QUdpSocket* _server;    //  сокет сервера
+    QUdpSocket* _client;    //  сокет клиента
     quint16 _port;          //  порт на котором работает клиент/сервер
 
 public:
