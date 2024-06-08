@@ -3,7 +3,7 @@
 #include "UdpTrans.h"
 
 // ----- конструктор (передаём родителя и порт, на котором работает клиент/сервер)------
-UdpTrans::UdpTrans(QObject* parent /*=nullptr*/, quint16 port /*=3456*/) :
+UdpTrans::UdpTrans(QObject* parent /*=nullptr*/, quint16 port /*=0*/) :
     QObject(parent), // родительский конструктор
     _port(port)      // порт на котором работает клиент/сервер
 {

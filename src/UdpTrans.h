@@ -11,7 +11,8 @@ private:
     quint16 _port;          //  порт на котором работает клиент/сервер
 
 public:
-    UdpTrans(QObject* parent = nullptr, quint16 port = 3456);  //  конструктор (передаём родителя и порт, на котором работает клиент/сервер)
+    UdpTrans(QObject* parent = nullptr, quint16 port = 0);  //  конструктор (передаём родителя и порт, на котором работает клиент/сервер)
+    inline quint16 getPort() const {return _port;};  // выдать ПОРТ
 
 private slots:
     void slotSendDatagram(const QByteArray &datagram, const QHostAddress &address); // слот передачи сервером конкретной датаграммы по заданному адресу (порт = _port)

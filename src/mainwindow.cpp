@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 // отклик на принятие данных
     connect(&_udp,SIGNAL(signalDataRead(const QByteArray &, const QHostAddress &)), this, SLOT(slotDataRead(const QByteArray &, const QHostAddress &)));
 
-    //slotChangePort();
+    slotChangePort();
 }
 
 //---------------------------------------------------------------------
@@ -33,13 +33,13 @@ void MainWindow::slotSendDatagram()
 {
     QHostAddress address(ui->host_edit->text());
     if(address.isNull()){
-        ui->receive_txt->append("ERROR: NO SUCH IP-ADDRESS");
+        ui->receive_txt->append("ОШИБКА:\tНЕВЕРНЫЙ IP-АДРЕС ПОЛУЧАТЕЛЯ");
         return;
     }
 
-    QByteArray datagram(ui->send_txt->toPlainText().toLatin1());
+    QByteArray datagram(ui->send_txt->toPlainText().toUtf8());
     if(datagram.isNull()){
-        ui->receive_txt->append("ERROR: INVALID DATA");
+        ui->receive_txt->append("ОШИБКА:\tНЕИЗВЕСТНЫЙ ФОРМАТ ДАННЫХ");
         return;
     }
 
@@ -55,11 +55,18 @@ void MainWindow::slotChangePort()
 
     if(ok && port < 65536)
         emit signalChangePort(port);
+    else{
+        ui->receive_txt->append("ОШИБКА:\tНЕВЕРНЫЙ СЕТЕВОЙ ПОРТ:\n\t" +
+                                ui->port_edit->text() +
+                                "\n\tВОЗМОЖНО ВНЕ ДИАПАЗОНА 0-65535"
+                                "\n\tВОЗВРАЩАЮСЬ К ПРЕДУДЫЩЕМУ ПОРТУ");
+        ui->port_edit->setText(QString::number(_udp.getPort(),10));
+    }
 }
 void MainWindow::slotDataRead(const QByteArray &datagram, const QHostAddress &address)
 {
     if(datagram.isNull() || address.isNull())
         return;
 
-    ui->receive_txt->append(address.toString() + ": " + QString::fromLatin1(datagram));
+    ui->receive_txt->append(address.toString() + ": " + QString::fromUtf8(datagram));
 }
