@@ -16,16 +16,16 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    UdpTrans _udp;
+    UdpTrans _udp;  // наш клиент/сервер
 
 public slots:
-    void slotSendDatagram();
-    void slotChangePort();
-    void slotDataRead(const QByteArray &, const QHostAddress &);
+    void slotSendDatagram();    // слот кнопки - отправить датаграмму
+    void slotChangePort();      // слот кнопки - поменять порт
+    void slotDataRead(const QByteArray &, const QHostAddress &);    // слот получения данных от клиента
 
 signals:
-    void signalSendDatagram(const QByteArray &, const QHostAddress &);
-    void signalChangePort(quint16);
+    void signalSendDatagram(const QByteArray &, const QHostAddress &);  // сигнал от слота к серверу - отправить датаграмму
+    void signalChangePort(quint16);                                     // сигнал от слота к клиент/серверу - поменять порт
 
 private:
     Ui::MainWindow *ui;

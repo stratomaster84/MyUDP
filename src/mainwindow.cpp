@@ -8,18 +8,18 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-// кнопка на высылку сообщения
+// кнопка на высылку сообщения (кнопка - this, this - сервер)
     connect(ui->send_but, SIGNAL(clicked()), this, SLOT(slotSendDatagram()));
     connect(this, SIGNAL(signalSendDatagram(const QByteArray &, const QHostAddress &)), &_udp, SLOT(slotSendDatagram(const QByteArray &, const QHostAddress &)));
 
-// кнопка замены порта
+// кнопка замены порта (кнопка - this, this - клиент/сервер)
     connect(ui->port_but, SIGNAL(clicked()), this, SLOT(slotChangePort()));
     connect(this, SIGNAL(signalChangePort(quint16)), &_udp, SLOT(slotChangePort(quint16)));
 
-// отклик на принятие данных
+// отклик на принятие данных    (клиент - this)
     connect(&_udp,SIGNAL(signalDataRead(const QByteArray &, const QHostAddress &)), this, SLOT(slotDataRead(const QByteArray &, const QHostAddress &)));
 
-    slotChangePort();
+    slotChangePort();   // меняет порт (должен быть после connect, т.к. кидает сигнал)
 }
 
 //---------------------------------------------------------------------
@@ -43,10 +43,10 @@ void MainWindow::slotSendDatagram()
         return;
     }
 
-    ui->receive_txt->append("Вы: " + ui->send_txt->toPlainText());
+    ui->receive_txt->append("Вы: " + ui->send_txt->toPlainText()); // печать своего сообщения
 
-    emit signalSendDatagram(datagram, address);
-    ui->send_txt->clear();
+    emit signalSendDatagram(datagram, address);     // сигнал серверу на отправку сообщения
+    ui->send_txt->clear();                          // стираем сообщение на форме
 }
 void MainWindow::slotChangePort()
 {
@@ -54,19 +54,24 @@ void MainWindow::slotChangePort()
     uint port = ui->port_edit->text().toUInt(&ok,10);
 
     if(ok && port < 65536)
-        emit signalChangePort(port);
+        emit signalChangePort(port);    // если новый порт в порядке - меняем, посылая сигнал в клиент/сервер
     else{
         ui->receive_txt->append("ОШИБКА:\tНЕВЕРНЫЙ СЕТЕВОЙ ПОРТ:\n\t" +
                                 ui->port_edit->text() +
-                                "\n\tВОЗМОЖНО ВНЕ ДИАПАЗОНА 0-65535"
-                                "\n\tВОЗВРАЩАЮСЬ К ПРЕДУДЫЩЕМУ ПОРТУ");
+                                "\n\tТРЕБУЕТСЯ ПОРТ В ДИАПАЗОНЕ 0-65535"
+                                "\n\tВОЗВРАЩАЮСЬ К ПРЕДУДЫЩЕМУ ПОРТУ:\n\t" +
+                                QString::number(_udp.getPort(),10));
         ui->port_edit->setText(QString::number(_udp.getPort(),10));
     }
 }
 void MainWindow::slotDataRead(const QByteArray &datagram, const QHostAddress &address)
 {
-    if(datagram.isNull() || address.isNull())
+    if(datagram.isNull())
         return;
-
-    ui->receive_txt->append(address.toString() + ": " + QString::fromUtf8(datagram));
+    if(address.isNull()){
+        ui->receive_txt->append("UNKNOWN: " + QString::fromUtf8(datagram));
+    }
+    else{
+        ui->receive_txt->append(address.toString() + ": " + QString::fromUtf8(datagram));
+    }
 }
